@@ -2,8 +2,8 @@
     class db{
         // Properties
         private $dbhost = 'us-cdbr-iron-east-04.cleardb.net';
-        private $dbuser = 'b552979c1d2441';
-        private $dbpass = 'bd19efd8';
+        private $dbuser = 'UserBD';
+        private $dbpass = 'senhaBD';
         private $dbname = 'heroku_db98b53a797e5a7';
 
         // Connect
