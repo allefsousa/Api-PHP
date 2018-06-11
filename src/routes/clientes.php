@@ -4,6 +4,24 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $app = new \Slim\App;
 
 
+// Delete Customer
+$app->delete('/api/clientes/delete/{id}', function(Request $request, Response $response){
+    $id = $request->getAttribute('id');
+    $sql = "DELETE FROM cli WHERE id = '$id';";
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $db = null;
+        echo '{"notice": {"text": "cliente deletado"}';
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
 // buscando todos os clientes
 $app->get('/api/clientes', function(Request $request, Response $response){
     $sql = 'SELECT * FROM cli';
@@ -25,23 +43,29 @@ $app->get('/api/clientes', function(Request $request, Response $response){
 
 
 $app->get('/api/clientes/{id}', function(Request $request, Response $response){
+
+
     $id = $request->getAttribute('id');
-    $sql = "SELECT * FROM cli WHERE id = '$id';";
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
-        $stmt = $db->query($sql);
-        $customer = $stmt->fetch(PDO::FETCH_OBJ);
-        $db = null;
-        echo json_encode($customer);
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
+    if(!empty($id)){
+
+   
+        $sql = "SELECT * FROM cli WHERE id = '$id';";
+        try{
+            // Get DB Object
+            $db = new db();
+            // Connect
+            $db = $db->connect();
+            $stmt = $db->query($sql);
+            $customer = $stmt->fetch(PDO::FETCH_OBJ);
+            $db = null;
+            echo json_encode($customer);
+        } catch(PDOException $e){
+            echo '{"error": {"text": '.$e->getMessage().'}';
+        }
     }
 });
 
-// Add Customer
+// Add Cliente
 $app->post('/api/clientes/add', function(Request $request, Response $response){
     $clinome = $request->getParam('nome');
     $clisobrenome = $request->getParam('sobrenome');
@@ -66,8 +90,10 @@ $app->post('/api/clientes/add', function(Request $request, Response $response){
         $stmt->bindParam(':cidade',       $clicidade);
         $stmt->bindParam(':estado',      $cliestado);
         $stmt->execute();
-        echo '{"notice": {"text": "Customer Added"}';
+        echo '{"Msg": {"text": "Cliente Adicionado"}';
     } catch(PDOException $e){
         echo '{"error": {"text": '.$e->getMessage().'}';
     }
 });
+
+
