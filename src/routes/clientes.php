@@ -22,3 +22,19 @@ $app->get('/api/clientes', function(Request $request, Response $response){
     
     
 });
+$app->get('/api/clientes/{id}', function(Request $request, Response $response){
+    $id = $request->getAttribute('id');
+    $sql = "SELECT * FROM cli WHERE id = '$id';";
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetch(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($customer);
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
