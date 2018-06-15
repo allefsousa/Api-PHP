@@ -144,4 +144,29 @@ $app->put('/api/clientes/update/{id}', function(Request $request, Response $resp
     }
 });
 
+// Add Cliente
+$app->post('/api/login', function(Request $request, Response $response){
+    $usuario = $request->getParam('usuario');
+    $senha = $request->getParam('senha');
+   
+    $sql = "SELECT * FROM cli where nome= '$usuario' and sobrenome= '$senha';";
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetch(PDO::FETCH_OBJ);
+        $db = null;
+        $data = array(
+            "results" => 
+                $customer
+          );
+        echo json_encode($data, JSON_PRETTY_PRINT);
+        
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
 
